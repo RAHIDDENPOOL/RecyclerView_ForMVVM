@@ -24,15 +24,15 @@ class MainActivity : AppCompatActivity() {
 
         adapter = UsersAdapter(object : UserActionListener {
             override fun onUserMove(user: User, moveBy: Int) {
-
+                usersService.moveUser(user, moveBy)
             }
 
             override fun onUserDelete(user: User) {
-
+                usersService.deleteUser(user)
             }
 
             override fun onUserDetails(user: User) {
-                Toast.makeText(this@MainActivity,"User: ${user.name}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "User: ${user.name}", Toast.LENGTH_SHORT).show()
 
             }
         })

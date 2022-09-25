@@ -1,8 +1,11 @@
 package com.example.mvvm
 
+import android.content.Context
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mvvm.databinding.ItemUserBinding
@@ -26,7 +29,8 @@ class UsersAdapter(private val actionListener: UserActionListener) :
         val user: User = v.tag as User
         when (v.id) {
             R.id.moreImageViewButton -> {
-                // todo
+                showPopupMenu(v)
+
             }
             else -> {
                 actionListener.onUserDetails(user)
@@ -68,7 +72,46 @@ class UsersAdapter(private val actionListener: UserActionListener) :
         }
     }
 
+    private fun showPopupMenu(view: View) {
+        val popupMenu = PopupMenu(view.context, view)
+        val context: Context = view.context
+        val user: User = view.tag as User
+        val position: Int = users.indexOfFirst { it.id == user.id }
+
+        popupMenu.menu.add(0, ID_MOVE_UP, Menu.NONE, "Move Up").apply {
+            isEnabled = position < users.size - 1
+        }
+        popupMenu.menu.add(0, ID_MOVE_DOWN, Menu.NONE, "Move Down").apply {
+            isEnabled = position < users.size - 1
+        }
+        popupMenu.menu.add(0, ID_REMOVE, Menu.NONE, "Remove")
+
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                ID_MOVE_UP -> {
+                    actionListener.onUserMove(user, -1)
+                }
+                ID_MOVE_DOWN -> {
+                    actionListener.onUserMove(user, 1)
+                }
+                ID_REMOVE -> {
+                    actionListener.onUserDelete(user)
+                }
+
+            }
+            return@setOnMenuItemClickListener true
+        }
+        popupMenu.show()
+
+    }
+
     class UsersViewHolder(
         val binding: ItemUserBinding
     ) : RecyclerView.ViewHolder(binding.root)
+
+    companion object {
+        private const val ID_MOVE_UP = 1
+        private const val ID_MOVE_DOWN = 2
+        private const val ID_REMOVE = 3
+    }
 }

@@ -2,4 +2,7 @@
     <string name="app_name">MVVM</string>
     <string name="ra_hiddenpool">Ra HIDDENPOOL</string>
     <string name="google_inc">Google Inc</string>
+    <string name="MoveDown">Move Down</string>
+    <string name="MoveUp">Move Up</string>
+    <string name="Remove">Remove</string>
 </resources>

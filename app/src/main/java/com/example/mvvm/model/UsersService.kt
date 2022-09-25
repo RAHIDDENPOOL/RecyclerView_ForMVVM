@@ -6,21 +6,20 @@ import java.util.*
 typealias UsersListener = (users: List<User>) -> Unit
 
 class UsersService {
-    private var users: MutableList<User> = mutableListOf<User>()
 
-    private val listeners: MutableList<UsersListener> = mutableListOf<UsersListener>()
+    private var users = mutableListOf<User>()
+
+    private val listeners = mutableSetOf<UsersListener>()
 
     init {
-        val faker: Faker = Faker.instance()
+        val faker = Faker.instance()
         IMAGES.shuffle()
-        users = (1..100).map {
-            User(
-                id = it.toLong(),
-                name = faker.name().name(),
-                company = faker.company().name(),
-                photo = IMAGES[it % IMAGES.size]
-            )
-        }.toMutableList()
+        users = (1..100).map { User(
+            id = it.toLong(),
+            name = faker.name().name(),
+            company = faker.company().name(),
+            photo = IMAGES[it % IMAGES.size]
+        ) }.toMutableList()
     }
 
     fun getUsers(): List<User> {
@@ -28,7 +27,7 @@ class UsersService {
     }
 
     fun deleteUser(user: User) {
-        val indexToDelete: Int = users.indexOfFirst { it.id == user.id }
+        val indexToDelete = users.indexOfFirst { it.id == user.id }
         if (indexToDelete != -1) {
             users.removeAt(indexToDelete)
             notifyChanges()
@@ -36,22 +35,25 @@ class UsersService {
     }
 
     fun moveUser(user: User, moveBy: Int) {
-        val oldIndex: Int = users.indexOfFirst { it.id == user.id }
+        val oldIndex = users.indexOfFirst { it.id == user.id }
         if (oldIndex == -1) return
-        val newIndex: Int = oldIndex + moveBy
+        val newIndex = oldIndex + moveBy
         if (newIndex < 0 || newIndex >= users.size) return
         Collections.swap(users, oldIndex, newIndex)
         notifyChanges()
     }
 
     fun addListener(listener: UsersListener) {
-        listeners.remove(listener)
+        listeners.add(listener)
         listener.invoke(users)
+    }
+
+    fun removeListener(listener: UsersListener) {
+        listeners.remove(listener)
     }
 
     private fun notifyChanges() {
         listeners.forEach { it.invoke(users) }
-
     }
 
     companion object {

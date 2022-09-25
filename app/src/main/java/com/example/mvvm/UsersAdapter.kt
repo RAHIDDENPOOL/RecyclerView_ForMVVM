@@ -51,7 +51,7 @@ class UsersAdapter(private val actionListener: UserActionListener) :
     }
 
     override fun onBindViewHolder(holder: UsersViewHolder, position: Int) {
-        val user: User = users[position]
+        val user = users[position]
         with(holder.binding) {
             holder.itemView.tag = user
             moreImageViewButton.tag = user
@@ -67,6 +67,7 @@ class UsersAdapter(private val actionListener: UserActionListener) :
                     .into(photoImageView)
 
             } else {
+                Glide.with(photoImageView.context).clear(photoImageView)
                 photoImageView.setImageResource(R.drawable.ic_user_avatar)
             }
         }
@@ -74,17 +75,17 @@ class UsersAdapter(private val actionListener: UserActionListener) :
 
     private fun showPopupMenu(view: View) {
         val popupMenu = PopupMenu(view.context, view)
-        val context: Context = view.context
-        val user: User = view.tag as User
-        val position: Int = users.indexOfFirst { it.id == user.id }
+        val context = view.context
+        val user = view.tag as User
+        val position = users.indexOfFirst { it.id == user.id }
 
-        popupMenu.menu.add(0, ID_MOVE_UP, Menu.NONE, "Move Up").apply {
+        popupMenu.menu.add(0, ID_MOVE_UP, Menu.NONE, context.getString(R.string.MoveUp)).apply {
+            isEnabled = position > 0
+        }
+        popupMenu.menu.add(0, ID_MOVE_DOWN, Menu.NONE, context.getString(R.string.MoveDown)).apply {
             isEnabled = position < users.size - 1
         }
-        popupMenu.menu.add(0, ID_MOVE_DOWN, Menu.NONE, "Move Down").apply {
-            isEnabled = position < users.size - 1
-        }
-        popupMenu.menu.add(0, ID_REMOVE, Menu.NONE, "Remove")
+        popupMenu.menu.add(0, ID_REMOVE, Menu.NONE, context.getString(R.string.Remove))
 
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -97,7 +98,6 @@ class UsersAdapter(private val actionListener: UserActionListener) :
                 ID_REMOVE -> {
                     actionListener.onUserDelete(user)
                 }
-
             }
             return@setOnMenuItemClickListener true
         }

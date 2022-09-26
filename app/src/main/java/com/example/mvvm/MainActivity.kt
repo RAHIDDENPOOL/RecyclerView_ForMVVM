@@ -38,8 +38,8 @@ class MainActivity : AppCompatActivity() {
         })
 
         val layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = adapter
+        binding.fragmentContainer.layoutManager = layoutManager
+        binding.fragmentContainer.adapter = adapter
 
         usersService.addListener(usersListener)
     }

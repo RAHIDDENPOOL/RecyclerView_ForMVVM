@@ -5,4 +5,7 @@
     <string name="MoveDown">Move Down</string>
     <string name="MoveUp">Move Up</string>
     <string name="Remove">Remove</string>
+    <string name="failed_to_load_users">failed to load users</string>
+    <string name="try_again">Try again</string>
+    <string name="no_users">No Users</string>
 </resources>

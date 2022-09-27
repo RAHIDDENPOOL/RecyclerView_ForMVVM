@@ -35,7 +35,7 @@ class UsersListFragment : Fragment() {
             }
 
             override fun onUserDetails(user: User) {
-
+                navigator().showDetails(user)
             }
         })
         viewModel.users.observe(viewLifecycleOwner, Observer {

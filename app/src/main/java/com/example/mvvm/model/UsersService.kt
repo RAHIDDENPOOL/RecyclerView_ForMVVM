@@ -1,5 +1,6 @@
 package com.example.mvvm.model
 
+import com.example.mvvm.UserNotFoundException
 import com.github.javafaker.Faker
 import java.util.*
 
@@ -14,16 +15,27 @@ class UsersService {
     init {
         val faker = Faker.instance()
         IMAGES.shuffle()
-        users = (1..100).map { User(
-            id = it.toLong(),
-            name = faker.name().name(),
-            company = faker.company().name(),
-            photo = IMAGES[it % IMAGES.size]
-        ) }.toMutableList()
+        users = (1..100).map {
+            User(
+                id = it.toLong(),
+                name = faker.name().name(),
+                company = faker.company().name(),
+                photo = IMAGES[it % IMAGES.size]
+            )
+        }.toMutableList()
     }
 
     fun getUsers(): List<User> {
         return users
+    }
+
+    fun getById(id: Long): UserDetails {
+        val user = users.firstOrNull { it.id == id } ?: throw UserNotFoundException()
+        return UserDetails(
+            user = user,
+            details = Faker.instance().lorem().paragraphs(3).joinToString("\n\n")
+        )
+
     }
 
     fun deleteUser(user: User) {
